@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import type React from "react"
@@ -7,9 +8,8 @@ import { Providers } from "./providers"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "zkConfide - Private AI Betting Protocol",
-  description:
-    "A revolutionary solution that brings privacy and security to betting and prediction markets, protecting users from MEV attacks.",
+  title: "Zk Predictions  ",
+  description: "A prediction market platform",
 }
 
 export default function RootLayout({
@@ -18,9 +18,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>
+          <Navbar />
           {children}
         </Providers>
       </body>
