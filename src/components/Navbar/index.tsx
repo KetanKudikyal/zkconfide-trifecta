@@ -1,8 +1,10 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import GoogleSignIn from '@/app/components/GoogleSignIn'
 
 const Navbar = () => {
     return (
-        <ConnectButton />
+        <div className='flex items-center justify-end'>
+            <GoogleSignIn />
+        </div>
     )
 }
 
