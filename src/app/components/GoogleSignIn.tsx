@@ -12,7 +12,6 @@ const GoogleSignIn = () => {
                 method: "POST",
             })
             const res = await req.json();
-            debugger
             return res;
         }
     })

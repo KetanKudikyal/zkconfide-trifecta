@@ -1,10 +1,10 @@
 "use client"
 
+import Navbar from "@/components/navbar"
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle, Lock, Server, Shield, Zap } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import GoogleSignIn from "./components/GoogleSignIn"
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -15,33 +15,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-              zkConfide
-            </span>
-          </div>
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#problem" className="hover:text-purple-400 transition-colors">
-              Problem
-            </a>
-            <a href="#solution" className="hover:text-purple-400 transition-colors">
-              Solution
-            </a>
-            <a href="#comparison" className="hover:text-purple-400 transition-colors">
-              Comparison
-            </a>
-            <a href="#changes" className="hover:text-purple-400 transition-colors">
-              What We Changed
-            </a>
-          </div>
-          <GoogleSignIn />
-        </div>
-      </nav>
-
-      {/* Hero Section */}
+      <Navbar />
       <section className="container mx-auto px-6 py-16 md:py-24">
         <div className="flex flex-col md:flex-row items-center">
           <motion.div
@@ -62,7 +36,7 @@ export default function Home() {
               <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity flex items-center">
                 Learn More <ArrowRight className="ml-2 h-5 w-5" />
               </button>
-              <Link href="/market/trump-win">
+              <Link href="/markets">
                 <button className="bg-transparent cursor-pointer border border-purple-500 text-white px-8 py-3 rounded-full hover:bg-purple-500/10 transition-colors">
                   Go to app
                 </button>

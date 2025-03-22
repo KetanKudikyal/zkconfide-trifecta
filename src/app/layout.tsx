@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import type React from "react"
@@ -19,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "dark")}>
         <Providers>
           {children}
         </Providers>
