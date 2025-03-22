@@ -8,6 +8,7 @@ import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useSession } from "next-auth/react"
 import { StepCreatePolicy } from "./step-create-policy"
 import { StepCreateWallet } from "./step-create-wallet"
 import { StepSignIn } from "./step-sign-in"
@@ -23,6 +24,8 @@ export function MultiStepModal() {
   const [open, setOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const { data: session } = useSession()
+
   const [userData, setUserData] = useState<UserData | null>(null)
 
   const totalSteps = 3
@@ -43,11 +46,17 @@ export function MultiStepModal() {
     setUserData(null)
   }
 
+  const getButtonText = () => {
+    if (session) {
+      return "Create wallet"
+    }
+    return "Sign in"
+  }
   return (
     <div className="flex flex-col items-center justify-center">
       <Button
         className="bg-gradient-to-r from-blue-500  cursor-pointer to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity"
-        onClick={() => setOpen(true)}>Open Onboarding</Button>
+        onClick={() => setOpen(true)}>{getButtonText()}</Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[500px]">

@@ -1,5 +1,6 @@
 'use client'
 import Navbar from "@/components/navigation"
+import markets from "@/utils/markets"
 import { BarChart2, ChevronRight, Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -7,7 +8,7 @@ import Link from "next/link"
 export default function Home() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900  text-white">
-            <Navbar />
+            <Navbar showLinks={false} />
             <div className="container  mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
                     <div className="bg-gradient-to-r from-orange-500 to-orange-400 rounded-lg overflow-hidden relative">
@@ -85,47 +86,49 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                    <div className="bg-gray-800/50 rounded-lg max-w-[400px] overflow-hidden">
-                        <div className="p-4 border-b flex justify-between items-center border-gray-700">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 flex items-center justify-center">
-                                    <Image
-                                        src="https://polymarket.com/_next/image?url=https%3A%2F%2Fpolymarket-upload.s3.us-east-2.amazonaws.com%2Fbitcoin-up-or-down-on-march-13-ppoEj3rBtGBr.jpg&w=256&q=100"
-                                        alt="Department of Education"
-                                        width={40}
-                                        height={40}
-                                        className="rounded-full"
-                                    />
+                    {markets.map((market) => (
+                        <div key={market.id} className="bg-gray-800/50 rounded-lg max-w-[400px] overflow-hidden">
+                            <div className="p-4 border-b flex justify-between items-center border-gray-700">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 flex items-center justify-center">
+                                        <Image
+                                            src={market.imageUrl}
+                                            alt={market.title}
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full"
+                                        />
+                                    </div>
+                                    <Link href={`/markets/${market.slug}?outcome=yes`}>
+                                        <h3 className="font-medium hover:underline cursor-pointer">{market.title}</h3>
+                                    </Link>
                                 </div>
-                                <Link href="/markets/bitcoin-up-or-down-on-march-22?outcome=yes">
-                                    <h3 className="font-medium hover:underline cursor-pointer">Bitcoin Up or Down on March 22?</h3>
-                                </Link>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center relative">
-                                    <div
-                                        className="absolute inset-0 rounded-full border-4 border-transparent border-t-red-500"
-                                        style={{ transform: "rotate(70deg)" }}
-                                    ></div>
-                                    <span className="text-sm font-bold">19%</span>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center relative">
+                                        <div
+                                            className="absolute inset-0 rounded-full border-4 border-transparent border-t-red-500"
+                                            style={{ transform: `rotate(${market.percentageAsAngle}deg)` }}
+                                        ></div>
+                                        <span className="text-sm font-bold">{market.yesPercentage}%</span>
+                                    </div>
+                                    <span className="text-sm text-gray-400">chance</span>
                                 </div>
-                                <span className="text-sm text-gray-400">chance</span>
+                            </div>
+                            <div className="p-4">
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Link href={`/markets/${market.slug}?outcome=yes`} className="bg-green-800 hover:bg-green-700 text-green-400 py-2 rounded flex items-center justify-center gap-1">
+                                        Buy Yes <ChevronRight className="h-4 w-4 rotate-90" />
+                                    </Link>
+                                    <Link href={`/markets/${market.slug}?outcome=no`} className="bg-red-900 hover:bg-red-800 text-red-400 py-2 rounded flex items-center justify-center gap-1">
+                                        Buy No <ChevronRight className="h-4 w-4 -rotate-90" />
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="p-4 border-t border-gray-700 flex items-center justify-between text-sm text-gray-400">
+                                <span>${market.volume} Vol.</span>
                             </div>
                         </div>
-                        <div className="p-4">
-                            <div className="grid grid-cols-2 gap-2">
-                                <Link href="/markets/bitcoin-up-or-down-on-march-22?outcome=yes" className="bg-green-800 hover:bg-green-700 text-green-400 py-2 rounded flex items-center justify-center gap-1">
-                                    Buy Yes <ChevronRight className="h-4 w-4 rotate-90" />
-                                </Link>
-                                <Link href="/markets/bitcoin-up-or-down-on-march-22?outcome=no" className="bg-red-900 hover:bg-red-800 text-red-400 py-2 rounded flex items-center justify-center gap-1">
-                                    Buy No <ChevronRight className="h-4 w-4 -rotate-90" />
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="p-4 border-t border-gray-700 flex items-center justify-between text-sm text-gray-400">
-                            <span>$428k Vol.</span>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>

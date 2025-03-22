@@ -5,6 +5,7 @@ import Navbar from '@/components/navigation'
 import { Button } from '@/components/ui/button'
 import useTypewriter from '@/hooks/useTypeWriter'
 import { cn } from '@/lib/utils'
+import { getMarketBySlug } from '@/utils/markets'
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -30,6 +31,7 @@ import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from "react"
 import { Line } from "react-chartjs-2"
+import NillionCard from '../../../../nillion-card'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
@@ -132,32 +134,33 @@ export default function MarketPage() {
     router.push(`/markets/${id}?outcome=${outcome}`)
   }
 
-  const { displayedText, isComplete } = useTypewriter({ text: "Nillion is a community of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market.", delay: 100 })
+  const { displayedText } = useTypewriter({ text: "Nillion is a community of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market.", delay: 100 })
+
+  const market = getMarketBySlug(id as string)
 
   return (
     <div className="min-h-screen bg-[#1a1a24] text-white">
-      <Navbar />
+      <Navbar showLinks={false} />
       <div className="container mx-auto px-4 mt-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 bg-white rounded-md overflow-hidden flex-shrink-0">
                 <Image
-                  src="https://polymarket.com/_next/image?url=https%3A%2F%2Fpolymarket-upload.s3.us-east-2.amazonaws.com%2Fbitcoin-up-or-down-on-march-13-ppoEj3rBtGBr.jpg&w=256&q=100"
-
-                  alt="Canada flag"
+                  src={market?.imageUrl ?? ""}
+                  alt={market?.title ?? ""}
                   width={64}
                   height={64}
                   className="object-cover"
                 />
               </div>
               <div className="flex-grow">
-                <h1 className="text-2xl font-bold mb-2 hover:underline cursor-pointer">Next Prime Minister of Canada after the election?</h1>
+                <h1 className="text-2xl font-bold mb-2 hover:underline cursor-pointer">{market?.title}</h1>
 
                 <div className="flex items-center gap-6 text-sm text-gray-400">
                   <div className="flex items-center gap-1">
                     <Trophy className="h-4 w-4" />
-                    <span>$17,025,472 Vol.</span>
+                    <span>${market?.volume} Vol.</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
@@ -201,14 +204,11 @@ export default function MarketPage() {
               </div>
             </div>
 
-            {/* Chart */}
             <div className="bg-[#2a2a38] rounded-lg p-4">
               <div className="h-[300px] relative">
                 {/* @ts-ignore */}
                 <Line options={options} data={data} />
               </div>
-
-              {/* Time Selector */}
               <div className="flex items-center gap-2 mt-4 border-t border-gray-700 pt-4">
                 {["1H", "6H", "1D", "1W", "1M", "ALL"].map((time) => (
                   <button
@@ -302,18 +302,8 @@ export default function MarketPage() {
             </div>
           </div>
           <div className="lg:col-span-1">
-            <div className="bg-[#2a2a38] rounded-lg overflow-hidden sticky top-4">
-              <div className="p-4 ">
-                <div className="flex items-center gap-3">
-                  <Avvvatars value={"nillion@gmail.com"} />
-                  <div className="font-medium">Nillion</div>
-                </div>
-                <p className="text-gray-400 mt-6">
-                  {displayedText}
-                </p>
-              </div>
-            </div>
-            <div className="bg-[#2a2a38] rounded-lg overflow-hidden  mt-10 ">
+            <NillionCard />
+            <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-slate-700 rounded-lg overflow-hidden  mt-10 ">
               <div className="p-4 border-b border-gray-700">
                 <div className="flex items-center gap-3">
                   <Avvvatars value={session?.user?.email ?? "best_user13@gmail.com"} />
