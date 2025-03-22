@@ -1,5 +1,5 @@
 'use client'
-import Navbar from "@/components/navbar"
+import Navbar from "@/components/navigation"
 import { BarChart2, ChevronRight, Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"

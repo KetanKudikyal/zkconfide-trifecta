@@ -1,7 +1,7 @@
 "use client"
 import Avvvatars from 'avvvatars-react'
 
-import Navbar from "@/components/navbar"
+import Navbar from '@/components/navigation'
 import { Button } from '@/components/ui/button'
 import useTypewriter from '@/hooks/useTypeWriter'
 import { cn } from '@/lib/utils'

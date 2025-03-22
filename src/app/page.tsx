@@ -1,6 +1,6 @@
 "use client"
 
-import Navbar from "@/components/navbar"
+import Navbar from "@/components/navigation"
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle, Lock, Server, Shield, Zap } from "lucide-react"
 import Link from "next/link"
