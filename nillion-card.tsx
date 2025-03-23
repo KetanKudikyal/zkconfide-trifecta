@@ -177,7 +177,7 @@ export default function NillionCard({ market }: { market: string | null }) {
                     initial={{ opacity: 0, x: -20 }}
                     ref={scrollRef}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex items-start gap-3 max-h-[500px] overflow-y-auto p-3 rounded-md bg-slate-700/30 border border-slate-600/30 hover:bg-slate-700/50 transition-colors"
+                    className="flex items-start gap-3 max-h-[300px] overflow-y-auto p-3 rounded-md bg-slate-700/30 border border-slate-600/30 hover:bg-slate-700/50 transition-colors"
                   >
                     <p style={{ whiteSpace: "pre-line" }}>
                       {isPending ? "Loading..." : displayedText}
