@@ -4,7 +4,7 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { name, maxAmount } = await request.json();
+  const { name, maxAmount, owner } = await request.json();
   try {
     if (!process.env.PRIVY_APP_ID || !process.env.PRIVY_APP_SECRET) {
       throw new Error("Privy app ID and secret are not set");
@@ -20,13 +20,13 @@ export async function POST(request: Request) {
             method: "eth_sendTransaction",
             rules: [
               {
-                name: "Restrict USDC transfers on Base",
+                name: "Restrict USDC transfers on Sepolia",
                 conditions: [
                   {
                     field_source: "ethereum_transaction",
                     field: "to",
                     operator: "eq",
-                    value: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC contract address
+                    value: "0xf08A50178dfcDe18524640EA6618a1f965821715", // USDC contract address
                   },
                   {
                     field_source: "ethereum_calldata",
@@ -81,6 +81,7 @@ export async function POST(request: Request) {
     );
     return NextResponse.json(response.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: (error as unknown as Error).message },
       { status: 500 }

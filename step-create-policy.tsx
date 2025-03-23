@@ -1,14 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Check, FileText, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { Check, FileText, Loader2 } from "lucide-react"
+import { useEffect, useState } from "react"
 
+import useWalletStore from "@/app/store"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useMutation } from "@tanstack/react-query"
 
 type PolicyData = {
   policyId: string
@@ -23,7 +25,31 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
   const [policyName, setPolicyName] = useState("")
   const [policyType, setPolicyType] = useState("standard")
   const [isCreating, setIsCreating] = useState(false)
-  const [policyId, setPolicyId] = useState("")
+  const { wallet, setPolicyId, policyId } = useWalletStore()
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/create-policy-2", {
+        method: "POST",
+        body: JSON.stringify({ name: policyName, maxAmount: policyType, owner: wallet }),
+      })
+      return res.json()
+    },
+    onSuccess: (data) => {
+      setPolicyId(data.id)
+      setIsCreating(false)
+    },
+    onError: (error) => {
+      debugger
+      console.error(error)
+    },
+  })
+
+  useEffect(() => {
+    if (policyId) {
+      onComplete({ policyId })
+    }
+  }, [policyId])
 
   const handleCreatePolicy = () => {
     if (!policyName) return
@@ -31,11 +57,7 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
     setIsCreating(true)
 
     // Simulate policy creation
-    setTimeout(() => {
-      const generatedId = "POL-" + Date.now().toString().slice(-8)
-      setPolicyId(generatedId)
-      setIsCreating(false)
-    }, 1500)
+    mutate()
   }
 
   return (
@@ -77,24 +99,24 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
           </div>
 
           <div className="space-y-2">
-            <Label>Policy Type</Label>
+            <Label>Policy Amount</Label>
             <RadioGroup value={policyType} onValueChange={setPolicyType}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="standard" id="standard" />
-                <Label htmlFor="standard" className="cursor-pointer">
-                  Standard
+                <RadioGroupItem value="100" id="100" />
+                <Label htmlFor="100" className="cursor-pointer">
+                  100 USDC
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="premium" id="premium" />
-                <Label htmlFor="premium" className="cursor-pointer">
-                  Premium
+                <RadioGroupItem value="200" id="200" />
+                <Label htmlFor="200" className="cursor-pointer">
+                  200 USDC
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="enterprise" id="enterprise" />
-                <Label htmlFor="enterprise" className="cursor-pointer">
-                  Enterprise
+                <RadioGroupItem value="300" id="300" />
+                <Label htmlFor="300" className="cursor-pointer">
+                  300 USDC
                 </Label>
               </div>
             </RadioGroup>

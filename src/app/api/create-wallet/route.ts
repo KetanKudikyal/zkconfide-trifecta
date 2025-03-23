@@ -9,15 +9,19 @@ export async function POST(request: Request) {
       throw new Error("Privy app ID and secret are not set");
     }
     const response = await fetch("https://api.privy.io/v1/wallets", {
-      method: "GET",
+      method: "POST",
       headers: {
         Authorization: `Basic ${btoa(
           process.env.PRIVY_APP_ID + ":" + process.env.PRIVY_APP_SECRET
         )}`,
-        "privy-app-id": process.env.PRIVY_APP_ID,
         "Content-Type": "application/json",
+        "privy-app-id": process.env.PRIVY_APP_ID,
       },
+      body: JSON.stringify({
+        chain_type: "ethereum",
+      }),
     });
+
     const data = await response.json();
     console.log(data);
 

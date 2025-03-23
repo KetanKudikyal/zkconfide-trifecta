@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Check } from "lucide-react"
 import { useState } from "react"
 
+import useWalletStore from "@/app/store"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useSession } from "next-auth/react"
@@ -22,6 +23,7 @@ type UserData = {
 
 export function MultiStepModal() {
   const [open, setOpen] = useState(false)
+  const { wallet, policyId } = useWalletStore()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const { data: session } = useSession()
@@ -47,6 +49,12 @@ export function MultiStepModal() {
   }
 
   const getButtonText = () => {
+    if (wallet && policyId) {
+      return wallet.slice(0, 3) + "..." + wallet.slice(-3)
+    }
+    if (wallet) {
+      return "Create policy"
+    }
     if (session) {
       return "Create wallet"
     }
