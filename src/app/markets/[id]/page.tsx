@@ -134,7 +134,6 @@ export default function MarketPage() {
     router.push(`/markets/${id}?outcome=${outcome}`)
   }
 
-  const { displayedText } = useTypewriter({ text: "Nillion is a community of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market. We are a group of traders who are passionate about the stock market.", delay: 100 })
 
   const market = getMarketBySlug(id as string)
 
@@ -302,7 +301,7 @@ export default function MarketPage() {
             </div>
           </div>
           <div className="lg:col-span-1">
-            <NillionCard />
+            <NillionCard market={market?.title ?? null} />
             <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-slate-700 rounded-lg overflow-hidden  mt-10 ">
               <div className="p-4 border-b border-gray-700">
                 <div className="flex items-center gap-3">
