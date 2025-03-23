@@ -31,7 +31,7 @@ import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from "react"
 import { Line } from "react-chartjs-2"
-import { erc20Abi, formatUnits, parseUnits } from 'viem'
+import { encodeFunctionData, erc20Abi, formatUnits, parseUnits } from 'viem'
 import { useReadContract } from 'wagmi'
 import NillionCard from '../../../../nillion-card'
 
@@ -139,6 +139,9 @@ export default function MarketPage() {
     router.push(`/markets/${id}?outcome=${outcome}`)
   }
 
+  // const { data: balance } = useBalance({
+  //   address: wallet as `0x${string}`
+  // })
   const { data: balance, error } = useReadContract({
     abi: erc20Abi,
     address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
@@ -159,12 +162,18 @@ export default function MarketPage() {
   const onTade = async () => {
     try {
       if (!value || !walletId) return;
+      const encodedData = encodeFunctionData({
+        abi: erc20Abi,
+        functionName: "transfer",
+        args: [wallet as `0x${string}`, parseUnits(value, 6)],
+      })
       const res = await fetch("/api/send-transaction", {
         method: "POST",
         body: JSON.stringify({
           wallet_id: walletId,
           to: "0x1Bcb64DB8e9EFd85f4323d841e4fF4826f6aCAC0",
-          value: parseUnits(value.toString(), 6).toString(),
+          value: parseUnits(value, 6).toString(),
+          data: encodedData,
           chain_name: "base-sepolia",
         }),
       })
@@ -172,11 +181,8 @@ export default function MarketPage() {
       if (data.error) {
         throw new Error()
       }
-      console.log(data, "data")
-      setTx(data.tx_hash)
+      setTx(data.hash)
     } catch (error) {
-      debugger
-      setTx("0x9a488b80e5bbe9cc3a9fc62061200eeb876919ccdc777ab37627e50a46327b12")
       console.log(error, "error")
     }
   }

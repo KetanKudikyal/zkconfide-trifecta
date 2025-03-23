@@ -40,7 +40,6 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
       setIsCreating(false)
     },
     onError: (error) => {
-      debugger
       console.error(error)
     },
   })

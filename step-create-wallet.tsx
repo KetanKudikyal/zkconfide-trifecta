@@ -40,7 +40,6 @@ export function StepCreateWallet({ onComplete, isLoading }: StepCreateWalletProp
       return res;
     },
     onSuccess: async (data) => {
-      debugger
       const walletId = data.wallet_id
       setWalletId(walletId)
       const account = privateKeyToAccount(
