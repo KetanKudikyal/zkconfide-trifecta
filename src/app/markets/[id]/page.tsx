@@ -227,26 +227,6 @@ export default function MarketPage() {
               </div>
             </div>
 
-            {/* Candidates Summary */}
-            <div className="flex flex-wrap gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span>Mark Carney 59%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                <span>Pierre Poilievre 42%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                <span>Jagmeet Singh &lt;1%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                <span>Justin Trudeau &lt;1%</span>
-              </div>
-            </div>
-
             <div className="bg-[#2a2a38] rounded-lg p-4">
               <div className="h-[300px] relative">
                 {/* @ts-ignore */}
@@ -283,17 +263,17 @@ export default function MarketPage() {
                   <div className="flex items-center gap-3">
                     <Avvvatars value="best_user13@gmail.com" />
                     <div>
-                      <div className="font-medium">Mark Carney</div>
+                      <div className="font-medium">over 100k</div>
                       <div className="text-sm text-gray-400">$2,228,373 Vol.</div>
                     </div>
                   </div>
                   <div className="text-3xl font-bold">59%</div>
                   <div className="grid grid-cols-2 gap-2 mt-4">
                     <button className="bg-green-800 min-w-[200px] hover:bg-green-700 text-green-400 py-2 rounded flex items-center justify-center">
-                      Buy Yes 59¢
+                      Yes 59¢
                     </button>
                     <button className="bg-red-900 min-w-[200px] hover:bg-red-800 text-red-400 py-2 rounded flex items-center justify-center">
-                      Buy No 42¢
+                      No 42¢
                     </button>
                   </div>
                 </div>
@@ -305,17 +285,17 @@ export default function MarketPage() {
                   <div className="flex items-center gap-3">
                     <Avvvatars value="best_user@gmail.com" />
                     <div>
-                      <div className="font-medium">Pierre Poilievre</div>
+                      <div className="font-medium">between 70k and 100k</div>
                       <div className="text-sm text-gray-400">$3,246,316 Vol.</div>
                     </div>
                   </div>
                   <div className="text-3xl font-bold">42%</div>
                   <div className="grid grid-cols-2 gap-2 mt-4">
                     <button className="bg-green-800 min-w-[200px] hover:bg-green-700 text-green-400 py-2 rounded flex items-center justify-center">
-                      Buy Yes 59¢
+                      Yes 59¢
                     </button>
                     <button className="bg-red-900 min-w-[200px] hover:bg-red-800 text-red-400 py-2 rounded flex items-center justify-center">
-                      Buy No 42¢
+                      No 42¢
                     </button>
                   </div>
                 </div>
@@ -327,17 +307,17 @@ export default function MarketPage() {
                   <div className="flex items-center gap-3">
                     <Avvvatars value="best_user1@gmail.com" />
                     <div>
-                      <div className="font-medium">Jagmeet Singh</div>
+                      <div className="font-medium">under 70k</div>
                       <div className="text-sm text-gray-400">$6,054,198 Vol.</div>
                     </div>
                   </div>
                   <div className="text-3xl font-bold">&lt;1%</div>
                   <div className="grid grid-cols-2 gap-2 mt-4">
                     <button className="bg-green-800 min-w-[200px] hover:bg-green-700 text-green-400 py-2 rounded flex items-center justify-center">
-                      Buy Yes 59¢
+                      Yes 59¢
                     </button>
                     <button className="bg-red-900 min-w-[200px] hover:bg-red-800 text-red-400 py-2 rounded flex items-center justify-center">
-                      Buy No 42¢
+                      No 42¢
                     </button>
                   </div>
                 </div>

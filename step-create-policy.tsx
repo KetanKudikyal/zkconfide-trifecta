@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Check, FileText, Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import useWalletStore from "@/app/store"
 import { Button } from "@/components/ui/button"
@@ -44,12 +44,6 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
       console.error(error)
     },
   })
-
-  useEffect(() => {
-    if (policyId) {
-      onComplete({ policyId })
-    }
-  }, [policyId])
 
   const handleCreatePolicy = () => {
     if (!policyName) return
@@ -137,6 +131,7 @@ export function StepCreatePolicy({ onComplete, isLoading }: StepCreatePolicyProp
                 </div>
                 <div className="font-medium">Policy Created Successfully</div>
               </div>
+              <div>Marlin server :  <a href={`https://arbiscan.io/tx/0x909c6963b13a098d0db5634dd536720abfea6f7f3ca0a541079e94b232d32294`} target="_blank" className="text-blue-400 hover:underline">{"0x036CbD53842c5426634e7929541eC2318f3dCF7e".slice(0, 6)}...{policyId}</a> </div>
               <div className="mt-2 space-y-1">
                 <div className="text-sm">
                   <span className="font-medium">Policy ID:</span> {policyId}
