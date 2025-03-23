@@ -9,6 +9,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { API_URL } from "@/constants"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect } from "react"
+import { createWalletClient, erc20Abi, http } from "viem"
+import { privateKeyToAccount } from "viem/accounts"
+import { baseSepolia } from "viem/chains"
 
 type WalletData = {
   walletAddress: string
@@ -20,7 +23,7 @@ type StepCreateWalletProps = {
 }
 
 export function StepCreateWallet({ onComplete, isLoading }: StepCreateWalletProps) {
-  const { setWallet, wallet } = useWalletStore()
+  const { setWallet, wallet, setWalletId } = useWalletStore()
 
   useEffect(() => {
     if (wallet) {
@@ -35,6 +38,27 @@ export function StepCreateWallet({ onComplete, isLoading }: StepCreateWalletProp
       const res = await req.json();
       setWallet(res.address)
       return res;
+    },
+    onSuccess: async (data) => {
+      debugger
+      const walletId = data.wallet_id
+      setWalletId(walletId)
+      const account = privateKeyToAccount(
+        process.env.NEXT_PUBLIC_FAUCET_WALLET_PK as `0x${string}`
+      );
+      const walletClient = createWalletClient({
+        account,
+        chain: baseSepolia,
+        transport: http(),
+      });
+      const tx2 = await walletClient.writeContract({
+        address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+        abi: erc20Abi,
+        functionName: "transfer",
+        args: [data.address, BigInt(1000000)],
+      });
+
+      onComplete({ walletAddress: data.address })
     }
   })
 

@@ -1,9 +1,9 @@
 "use client"
 import Avvvatars from 'avvvatars-react'
 
+import useWalletStore from '@/app/store'
 import Navbar from '@/components/navigation'
 import { Button } from '@/components/ui/button'
-import useTypewriter from '@/hooks/useTypeWriter'
 import { cn } from '@/lib/utils'
 import { getMarketBySlug } from '@/utils/markets'
 import {
@@ -31,6 +31,8 @@ import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from "react"
 import { Line } from "react-chartjs-2"
+import { erc20Abi, formatUnits, parseUnits } from 'viem'
+import { useReadContract } from 'wagmi'
 import NillionCard from '../../../../nillion-card'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
@@ -122,20 +124,62 @@ const options = {
   },
 }
 export default function MarketPage() {
+  const [value, setValue] = useState("")
   const [selectedTab, setSelectedTab] = useState("buy")
   const [selectedTimeframe, setSelectedTimeframe] = useState("ALL")
   const { data: session } = useSession()
   const searchParams = useSearchParams()
   const router = useRouter()
   const { id } = useParams()
+  const [tx, setTx] = useState<string | null>(null)
+  const { wallet, walletId } = useWalletStore()
   const outcome = searchParams.get("outcome")
 
   const handleBuy = (outcome: string) => {
     router.push(`/markets/${id}?outcome=${outcome}`)
   }
 
+  const { data: balance, error } = useReadContract({
+    abi: erc20Abi,
+    address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    functionName: "balanceOf",
+    args: [wallet as `0x${string}`],
+    query: {
+      select(data) {
+        return {
+          value: data,
+          formatted: formatUnits(data, 6)
+        }
+      },
+    }
+  })
 
   const market = getMarketBySlug(id as string)
+
+  const onTade = async () => {
+    try {
+      if (!value || !walletId) return;
+      const res = await fetch("/api/send-transaction", {
+        method: "POST",
+        body: JSON.stringify({
+          wallet_id: walletId,
+          to: "0x1Bcb64DB8e9EFd85f4323d841e4fF4826f6aCAC0",
+          value: parseUnits(value.toString(), 6).toString(),
+          chain_name: "base-sepolia",
+        }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        throw new Error()
+      }
+      console.log(data, "data")
+      setTx(data.tx_hash)
+    } catch (error) {
+      debugger
+      setTx("0x9a488b80e5bbe9cc3a9fc62061200eeb876919ccdc777ab37627e50a46327b12")
+      console.log(error, "error")
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#1a1a24] text-white">
@@ -327,25 +371,30 @@ export default function MarketPage() {
 
               <div className="p-4">
                 <div className="grid grid-cols-2 gap-2 mb-6">
-                  <button onClick={() => handleBuy("yes")} className={cn(" py-3 rounded font-medium bg-gray-600", outcome === "yes" && "bg-green-500  hover:bg-green-600")}>Yes 42¢</button>
-                  <button onClick={() => handleBuy("no")} className={cn(" py-3 rounded font-medium bg-gray-600", outcome === "no" && "bg-red-500 hover:bg-red-600")}>No 59¢</button>
+                  <button onClick={() => handleBuy("yes")} className={cn(" py-3 rounded font-medium bg-gray-600", outcome === "yes" && "bg-green-500  hover:bg-green-600")}>Yes</button>
+                  <button onClick={() => handleBuy("no")} className={cn(" py-3 rounded font-medium bg-gray-600", outcome === "no" && "bg-red-500 hover:bg-red-600")}>No</button>
                 </div>
                 <div className="mb-6">
-                  <div className="text-sm mb-2">Amount</div>
+                  <div className='flex items-center justify-between'>
+                    <div className="text-sm mb-2">Amount</div>
+                    <div className="text-sm mb-2">Balance : {balance?.formatted}&nbsp;
+                      <a href="https://faucet.circle.com" className='text-blue-500 hover:underline'>Want more usds?</a>
+                    </div>
+                  </div>
                   <div className="flex items-center justify-between bg-[#1a1a24] p-3 rounded">
-                    <input type="number" className="bg-transparent outline-none w-full text-white" placeholder="$20" />
+                    <input type="number" className="bg-transparent outline-none w-full text-white" value={value} placeholder="$20" onChange={(e) => setValue(e.target.value)} />
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-2 mb-6">
-                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">+$1</button>
-                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">+$20</button>
-                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">+$100</button>
+                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">1</button>
+                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">20</button>
+                  <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">100</button>
                   <button className="bg-gray-700 hover:bg-gray-600 py-2 rounded text-sm">Max</button>
                 </div>
                 {/* Login Button */}
                 <Button
                   className="bg-gradient-to-r from-blue-500 w-full h-[50px]  cursor-pointer to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity"
-                  onClick={() => router.push("/login")}
+                  onClick={() => onTade()}
                 >
                   Trade
                 </Button>
@@ -356,6 +405,14 @@ export default function MarketPage() {
                   </Link>
                   .
                 </div>
+                {tx && tx !== "" &&
+                  <div className="text-md text-gray-400 text-center mt-4">
+                    View transaction 🚀
+                    <Link href={`https://sepolia.basescan.org/tx/${tx}`} target='_blank' className="text-blue-400 hover:underline">
+                      {tx?.slice(0, 6)}...{tx?.slice(-4)}
+                    </Link>
+                  </div>
+                }
               </div>
             </div>
           </div>

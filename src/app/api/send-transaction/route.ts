@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { wallet_id, to, value, chain_name } = await request.json();
-  console.log(request.body);
   try {
     const encryptionService = await createEncryptionService({
       nodes: 3,
@@ -19,6 +18,8 @@ export async function POST(request: Request) {
     const decryptedWalletId = await encryptionService.decryptPassword(
       wallet_id
     );
+
+    console.log("decryptedWalletId", decryptedWalletId);
 
     const chainId = chain_name === "sepolia" ? "11155111" : "84532";
 
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
     );
     return NextResponse.json(response.data);
   } catch (error) {
+    console.log(error, "error");
     return NextResponse.json(
       { error: (error as unknown as Error).message },
       { status: 500 }
